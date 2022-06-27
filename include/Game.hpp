@@ -1,17 +1,16 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#define INCLUDE_SDL
-#define INCLUDE_SDL_TTF
-#define INCLUDE_SDL_IMAGE
-#define INCLUDE_SDL_MIXER
-
 #include "SDL_include.h"
 #include "State.hpp"
 #include <string>
 #include <bits/stdc++.h> //Faz diferença usar a <iostream>?
-
 using namespace std;
+
+// #define INCLUDE_SDL
+// #define INCLUDE_SDL_TTF
+// #define INCLUDE_SDL_IMAGE
+// #define INCLUDE_SDL_MIXER
 
 class Game{
 private:

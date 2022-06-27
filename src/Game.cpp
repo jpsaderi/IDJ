@@ -48,6 +48,7 @@ Game::Game(string title, int width, int height){
         cout << SDL_GetError() << endl;
     }
 
+    srand(time(NULL));
     state = new State();
 }
 

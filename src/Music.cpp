@@ -1,7 +1,7 @@
 #include "../include/Music.hpp"
 
 Music::Music(){
-    music = nullptr;
+    // music = nullptr;
 }
 
 Music::Music(string file){
