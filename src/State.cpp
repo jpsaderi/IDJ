@@ -1,12 +1,20 @@
 #include "../include/State.hpp"
 
 State::State(){
-	GameObject *go = new GameObject();
-	
-	string path = "./assets/img/ocean.jpg";
-	Sprite *bg = new Sprite(*go, path);
+	GameObject* go = new GameObject();
+	GameObject* oceango = new GameObject();
+	Sprite* bg = new Sprite(*go, "./assets/img/ocean.jpg");
     
-	go -> AddComponent(bg);
+	oceango -> AddComponent(bg);
+	oceango -> box.x = 0;
+	oceango -> box.y = 0;
+
+	objectArray.emplace_back(oceango);
+
+	TileSet* tileset = new TileSet(64, 64, "./assets/img/tileset.png");
+
+	TileMap* tilemap = new TileMap(*go, "./assets/map/tileMap.txt", tileset);
+	go -> AddComponent(tilemap);
 	go -> box.x = 0;
 	go -> box.y = 0;
 	objectArray.emplace_back(go);
@@ -29,19 +37,19 @@ void State::Update(float dt){
     }
     for(unsigned int i = 0; i < objectArray.size(); i++){
         if (objectArray[i]->IsDead()){
-			Sound *sound = (Sound*) objectArray[i] -> GetComponent("Sound");
-			objectArray[i].get() -> RemoveComponent(objectArray[i]->GetComponent("Sprite"));
-			objectArray[i].get() -> RemoveComponent(objectArray[i]->GetComponent("Face"));
+			// Sound *sound = (Sound*) objectArray[i] -> GetComponent("Sound");
+			// objectArray[i].get() -> RemoveComponent(objectArray[i]->GetComponent("Sprite"));
+			// objectArray[i].get() -> RemoveComponent(objectArray[i]->GetComponent("Face"));
 
-			if((sound != nullptr && sound -> IsOpen() == false) || (sound == nullptr)){
+			// if((sound != nullptr && sound -> IsOpen() == false) || (sound == nullptr)){
 				objectArray.erase(objectArray.begin()+i);
-			}
+			// }
         }
     }
-    if (SDL_QuitRequested() == true){ //Mantem?
-        music.Stop();
-        quitRequested = true;
-    }
+    // if (SDL_QuitRequested() == true){ //Mantem?
+    //     music.Stop();
+    //     quitRequested = true;
+    // }
 }
 
 void State::Render(){

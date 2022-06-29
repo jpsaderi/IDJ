@@ -14,6 +14,7 @@
 #include "Rect.hpp"
 #include "Vec2.hpp"
 #include <math.h>
+#include "TileMap.hpp"
 
 using namespace std;
 

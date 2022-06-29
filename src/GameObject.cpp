@@ -40,6 +40,7 @@ void GameObject::RemoveComponent(Component* cpt){
     for(unsigned int i = 0; i < this -> components.size(); i++){ // não tem -1
         if(cpt == this -> components[i]){
             components.erase(this -> components.begin()+i);
+            break;
         } 
     } 
 }
