@@ -44,8 +44,8 @@ void Sprite::Render(float x, float y){
     SDL_Rect dstrect;
     dstrect.x = x;
     dstrect.y = y;
-    dstrect.w = associated.box.w;
-    dstrect.h = associated.box.h;
+    dstrect.w = clipRect.w;
+    dstrect.h = clipRect.h;
 
     if(IsOpen()){
         if(SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect) != 0){
