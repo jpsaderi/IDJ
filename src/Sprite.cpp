@@ -37,15 +37,15 @@ void Sprite::SetClip(int x, int y, int w, int h){
 }
 
 void Sprite::Render(){
-    Render(associated.box.x, associated.box.y);
+    Render(associated.box.x-Camera::pos.x, associated.box.y-Camera::pos.y);
 }
 
 void Sprite::Render(float x, float y){
     SDL_Rect dstrect;
     dstrect.x = x;
     dstrect.y = y;
-    dstrect.w = associated.box.w;
-    dstrect.h = associated.box.h;
+    dstrect.w = clipRect.w;
+    dstrect.h = clipRect.h;
 
     if(IsOpen()){
         if(SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect) != 0){

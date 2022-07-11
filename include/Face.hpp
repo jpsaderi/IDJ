@@ -4,6 +4,8 @@
 #include "SDL_include.h"
 #include "GameObject.hpp"
 #include "Sound.hpp"
+#include "InputManager.hpp"
+#include "Camera.hpp"
 #include <string>
 
 class Face : public Component{

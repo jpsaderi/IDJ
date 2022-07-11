@@ -14,8 +14,11 @@ public:
     Vec2 operator+ (Vec2 rhs);
     Vec2 operator- (Vec2 rhs);
     Vec2 operator* (float rhs);
+    Vec2 operator+= (Vec2 rhs);
     Vec2 GetRotated(float angle);
-    
+    Vec2 Normalized();
+
+    float Magnitude();
 };
 
 #endif

@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "Camera.hpp"
 
 class TileMap : public Component{
 private:

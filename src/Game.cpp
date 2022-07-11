@@ -47,7 +47,8 @@ Game::Game(string title, int width, int height){
         printf("SDL_CreateRenderer fail\n");
         cout << SDL_GetError() << endl;
     }
-
+    frameStart = 0;
+    dt = 0;
     srand(time(NULL));
     state = new State();
 }
@@ -77,9 +78,24 @@ SDL_Renderer* Game::GetRenderer(){
 }
 void Game::Run(){
     while(state->QuitRequested() == false){
-        state->Update(0);
+        CalculateDeltaTime();
+        InputManager::GetInstance().Update();
+        state->Update(dt);
         state->Render();
         SDL_RenderPresent(renderer);
         SDL_Delay(33);
     }
+    Resources::ClearImages();
+    Resources::ClearSounds();
+    Resources::ClearMusics();
+}
+
+void Game::CalculateDeltaTime(){
+    int lastFrame = frameStart;
+    frameStart = SDL_GetTicks();
+    dt = (frameStart - lastFrame)/1000.0; //conventer para segundos
+}
+
+float Game::GetDeltaTime(){
+    return dt;
 }

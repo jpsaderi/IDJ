@@ -12,8 +12,9 @@ public:
     Rect();
     Rect(float x, float y, float w, float h);
     Rect operator+(Vec2 rhs);
-    
+    friend Rect operator+(Vec2 vect,Rect rect);
     bool Contains(Vec2 rhs);
+    Vec2 Center();
 };
 
 #endif

@@ -15,6 +15,7 @@
 #include "Vec2.hpp"
 #include <math.h>
 #include "TileMap.hpp"
+#include "CameraFollower.hpp"
 
 using namespace std;
 
