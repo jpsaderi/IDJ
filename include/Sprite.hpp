@@ -37,7 +37,6 @@ public:
 
     void SetScale(float scaleX, float ScaleY);
     Vec2 GetScale();
-w
 };
 
 #endif
