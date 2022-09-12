@@ -19,6 +19,10 @@ public:
     Vec2 Normalized();
 
     float Magnitude();
+
+    float anglex();
+    float anglex2(Vec2& rhs);    
+    float dist(Vec2& rhs);
 };
 
 #endif

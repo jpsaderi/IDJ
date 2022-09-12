@@ -1,9 +1,9 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "SDL_include.h"
 #include "GameObject.hpp"
 #include "InputManager.hpp"
+#include "SDL_include.h"
 
 class Camera{
 private:
@@ -16,6 +16,5 @@ public:
     static Vec2 pos;
     static Vec2 speed;
 };
-
 
 #endif

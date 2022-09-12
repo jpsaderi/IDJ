@@ -33,3 +33,7 @@ void Face::Render(){
 bool Face::Is(string type){
     return type == "Face";
 }
+
+void Face::Start(){
+    
+}

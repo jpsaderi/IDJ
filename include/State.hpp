@@ -1,8 +1,7 @@
 #ifndef STATE_HPP
 #define STATE_HPP
+
 #define INCLUDE_SDL
-// #define INCLUDE_SDL_IMAGE
-// #define INCLUDE_SDL_MIXER
 
 #include "SDL_include.h"
 #include "Bits/stdc++.h"
@@ -16,6 +15,7 @@
 #include <math.h>
 #include "TileMap.hpp"
 #include "CameraFollower.hpp"
+#include "Alien.hpp"
 
 using namespace std;
 
@@ -24,8 +24,9 @@ private:
     Music music;
     bool quitRequested;
     void Input();
-    void AddObject(int mouseX, int mouseY);
-    vector <unique_ptr<GameObject>> objectArray;
+    bool started;
+    vector <shared_ptr<GameObject>> objectArray;
+    
 public:
     State();
     ~State();
@@ -33,6 +34,9 @@ public:
     void LoadAssets();
     void Update(float dt);
     void Render();
+    void Start();
+    weak_ptr<GameObject> AddObject(GameObject* go);
+    weak_ptr<GameObject> GetObjectPtr(GameObject* go);
 };
 
 #endif

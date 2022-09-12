@@ -24,8 +24,18 @@ State::State(){
 	
 	music.Open("./assets/audio/stageState.ogg");
 	
-	LoadAssets();
+	GameObject* AlienGO = new GameObject();
+	AlienGO -> box.x = 512 - AlienGO -> box.w/2;
+	AlienGO -> box.y = 300 - AlienGO -> box.h/2;
+
+	Alien* alien = new Alien(*AlienGO, 5);
+	AlienGO -> AddComponent(alien);
+	// Camera::Follow(AlienGO);
+
+	objectArray.emplace_back(AlienGO);
+
 	quitRequested = false;
+	started = false;
 }
 
 void State::LoadAssets(){
@@ -38,13 +48,10 @@ void State::Update(float dt){
 	if(instance.KeyPress(ESCAPE_KEY) || instance.QuitRequested() == true){
 		quitRequested = true;
 	}
-	if(instance.KeyPress(SPACE_KEY)){
-		Vec2 objPos = Vec2(200, 0).GetRotated(-M_PI + M_PI*(rand() % 1001)/500.0 ) + Vec2(instance.GetMouseX(), instance.GetMouseY());
-		AddObject((int)objPos.x, (int)objPos.y);
-	}
-    Camera::Update(dt);
+
+	Camera::Update(dt);
     for(unsigned int i = 0; i < objectArray.size(); i++){
-        objectArray[i].get() -> Update(dt);
+        objectArray[i] -> Update(dt);
     }
     for(unsigned int i = 0; i < objectArray.size(); i++){
         if (objectArray[i]->IsDead()){
@@ -55,7 +62,7 @@ void State::Update(float dt){
 
 void State::Render(){
 	for(unsigned int i = 0; i < objectArray.size(); i++){
-		objectArray[i].get() -> Render();
+		objectArray[i] -> Render();
 	}
 }
 
@@ -67,25 +74,31 @@ State::~State(){
     objectArray.clear(); 
 }
 
-void State::AddObject(int mouseX, int mouseY){
-    GameObject* go = new GameObject();
+void State::Start(){
+	LoadAssets();
+	for(unsigned int i = 0; i < objectArray.size(); i++){
+		// objectArray[i].get() -> Start();
+		objectArray[i] -> Start();
+	}
+	started = true;	
+}
 
-	Sprite* image = new Sprite(*go, "assets/img/penguinface.png");
+weak_ptr<GameObject> State::AddObject(GameObject* go){
+	shared_ptr<GameObject> shared_ptr_go(go);
+	objectArray.push_back(shared_ptr_go);
+	if(started == true){
+		shared_ptr_go -> Start();
+	}
+	weak_ptr<GameObject> weak_ptr_go(shared_ptr_go);
+	return weak_ptr_go;
+}
 
-	go -> AddComponent(image);
-	// Centraliza o objeto
-
-	// go -> box.x = mouseX - image->GetWidth()/2;
-	// go -> box.y = mouseY - image->GetHeight()/2;
-
-	go -> box.x = mouseX - go->box.w/2 + Camera::pos.x;
-	go -> box.y = mouseY - go->box.h/2 + Camera::pos.y;
-
-	Sound* sound = new Sound(*go, "assets/audio/boom.wav");
-	go -> AddComponent(sound);
-
-	Face* face = new Face(*go);
-	go -> AddComponent(face);
-
-	objectArray.emplace_back(go);
+weak_ptr<GameObject> State::GetObjectPtr(GameObject* go){
+	for(unsigned int i = 0; i < objectArray.size(); i++){
+		if(objectArray[i].get() == go){
+			weak_ptr<GameObject> weak_ptr_go(objectArray[i]);
+			return weak_ptr_go;
+		}
+	}
+	return {}; //Retorna vazio
 }

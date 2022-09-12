@@ -3,9 +3,9 @@
 
 #define INCLUDE_SDL_MIXER
 
+#include "GameObject.hpp"
 #include "SDL_include.h"
 #include <string>
-#include "GameObject.hpp"
 
 using namespace std;
 
@@ -16,6 +16,7 @@ public:
     Component(GameObject& associated);
     virtual ~Component();
     
+    void virtual Start() = 0;
     void virtual Update(float dt) = 0;
     void virtual Render() = 0;
     bool virtual Is(string type) = 0;

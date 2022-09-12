@@ -2,8 +2,9 @@
 #define SOUND_HPP
 
 #include "SDL_include.h"
-#include "GameObject.hpp"
 #include "Component.hpp"
+#include "GameObject.hpp"
+#include "Resources.hpp"
 #include <string>
 
 using namespace std;
@@ -22,11 +23,13 @@ public:
     void Open(string file);
     bool IsOpen();
 
+    void Start();
     void Update(float dt);
     void Render();
-    bool Is(string type); //Pai bool
+    bool Is(string type);
 
     void Volume(int volume);
+
 };
 
 #endif

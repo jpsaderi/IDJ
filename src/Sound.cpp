@@ -30,7 +30,7 @@ void Sound::Stop(){
 }
 
 void Sound::Open(string file){
-    this -> chunk = Mix_LoadWAV(file.c_str());
+    this -> chunk = Resources::GetSound(file);
     if(this -> chunk == nullptr){
         printf("Sound Open fail\n");
     }
@@ -57,4 +57,8 @@ bool Sound::Is(string type){
 
 void Sound::Volume(int volume){ // Salvando o nosso ouvido 1...2...3... 
     Mix_VolumeChunk(this -> chunk, volume);
+}
+
+void Sound::Start(){
+    
 }

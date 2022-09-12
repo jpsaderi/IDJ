@@ -6,9 +6,11 @@
 #include <string>
 
 
+
 class TileSet{
 private:
     Sprite tileSet;
+    GameObject* associated;
     int rows;
     int columns;
 
@@ -16,6 +18,7 @@ private:
     int tileHeight;
 public:
     TileSet(int tileWidth, int tileHeight, string file);
+    ~TileSet();	
     void RenderTile(unsigned index, float x, float y);
     int GetTileWidth();
     int GetTileHeight();

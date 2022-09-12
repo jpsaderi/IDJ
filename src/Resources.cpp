@@ -53,5 +53,6 @@ void Resources::ClearSounds(){
     for(auto i = soundTable.begin(); i != soundTable.end(); i++){
         Mix_FreeChunk(i -> second);
     }
+    
     // soundTable.clear();
 }

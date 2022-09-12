@@ -17,19 +17,27 @@ private:
     int width;
     int height;
     SDL_Rect clipRect;
+    
+    Vec2 scale;
 public:
     Sprite(GameObject &associated);
     Sprite(GameObject &associated, string file);
     ~Sprite();
     void Open(string file);
     void SetClip(int x, int y, int w, int h);
-    void Render();
     void Render(float x, float y);
     int GetWidth();
     int GetHeight();
     bool IsOpen();
-    bool Is(string type);
+
+    void Start();
     void Update(float dt);
+    void Render();
+    bool Is(string type);
+
+    void SetScale(float scaleX, float ScaleY);
+    Vec2 GetScale();
+w
 };
 
 #endif

@@ -13,21 +13,25 @@ class Component;
 class GameObject{
 private:
     vector <Component*> components;
-    // vector <unique_ptr<Component>> components;
     bool isDead;
 public:
     GameObject();
     ~GameObject();
 
+    void Start();
     void Update(float dt);
     void Render();
     bool IsDead();
+    
     void RequestDelete();
     void AddComponent(Component* cpt);
     void RemoveComponent(Component* cpt);
     Component* GetComponent(string type);
 
     Rect box;
+
+    bool started;
+    double angleDeg;
 };
 
 

@@ -3,6 +3,7 @@
 Vec2::Vec2(){
 
 }
+
 Vec2::Vec2(float x, float y){
    this -> x = x;
    this -> y = y;
@@ -30,7 +31,7 @@ Vec2 Vec2::GetRotated(float angle){
    float sinx = sin(angle);
 
    aux.x = (this -> x*cosx) - (this -> y * sinx);
-   aux.y = (this -> y*cosx) - (this -> x * sinx);
+   aux.y = (this -> y*cosx) + (this -> x * sinx);
 
    return aux;
 }
@@ -42,7 +43,23 @@ Vec2 Vec2::Normalized(){
    return *this;
 }
 
-
 float Vec2::Magnitude(){
    return sqrt(pow(this -> x, 2) + pow(this -> y, 2));
+}
+
+float Vec2::anglex(){
+   return atan2(this->y, this->x);
+}
+
+float Vec2::anglex2(Vec2& rhs){
+   Vec2 aux = (rhs-*this);
+   return atan2(aux.y, aux.x);
+}
+
+float Vec2::dist(Vec2& rhs){
+   return (*this - rhs).Magnitude();
+}
+
+Vec2 operator*(float escalar, Vec2 &rhs){
+   return Vec2(escalar * rhs.x, escalar * rhs.y);
 }
