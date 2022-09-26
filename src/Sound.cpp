@@ -43,6 +43,15 @@ bool Sound::IsOpen(){
     return false;
 }
 
+
+void Sound::Volume(int volume){ // Salvando o nosso ouvido 1...2...3... 
+    Mix_VolumeChunk(this -> chunk, volume);
+}
+
+void Sound::Start(){
+    
+}
+
 void Sound::Update(float dt){
 
 }
@@ -55,10 +64,6 @@ bool Sound::Is(string type){
     return type == "Sound";
 }
 
-void Sound::Volume(int volume){ // Salvando o nosso ouvido 1...2...3... 
-    Mix_VolumeChunk(this -> chunk, volume);
-}
+void Sound::NotifyCollision(GameObject& other){
 
-void Sound::Start(){
-    
 }

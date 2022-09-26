@@ -1,36 +1,29 @@
 #ifndef ALIEN_HPP
 #define ALIEN_HPP
 
+#include "SDL_include.h"
 #include "Component.hpp"
 #include "Minion.hpp"
-#include "SDL_include.h"
+#include "Collider.hpp"
+#include "Timer.hpp"
 #include <string>
 
 using namespace std;
 
-#define MV Action::ActionType::MOVE
-#define SHT Action::ActionType::SHOOT
+// #define MV Action::ActionType::MOVE
+// #define RST Action::ActionType::RESTING
 
 
 class Alien : public Component{
 private:
-    class Action{
-    private:
-
-    public:
-        enum ActionType {MOVE, SHOOT};
-        Action(ActionType type, float x, float y);
-
-        ActionType type;
-        Vec2 pos; 
-    };
-
-    Vec2 speed;
+    enum AlienState {MOVING, RESTING};
+    AlienState state;
+    vector<weak_ptr<GameObject>> minionArray;
     int hp;
     int nMinions;
-    queue<Action> taskQueue;
-    vector<weak_ptr<GameObject>> minionArray;
-
+    Vec2 destionation;
+    Vec2 speed;
+    Timer restTimer;
 public:
     Alien(GameObject& associated, int nMinions);
     ~Alien();
@@ -39,8 +32,10 @@ public:
     void Update(float dt);
     void Render();
     bool Is(string type);
+    void NotifyCollision(GameObject& other);
 
     int ClosestMinion(Vec2 pos);
+    static int alienCount;
 };
 
 #endif

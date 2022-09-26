@@ -34,7 +34,7 @@ void Camera::Update(float dt){
         pos += speed.Normalized()*speed_*dt;
     }
     else{
-        pos.x = focus -> box.Center().x-512; //metade largura
-        pos.y = focus -> box.Center().y-300; //metade altura
+        pos.x = focus -> box.GetCenter().x-512; //metade largura
+        pos.y = focus -> box.GetCenter().y-300; //metade altura
     }
 }

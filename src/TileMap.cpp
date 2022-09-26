@@ -92,3 +92,7 @@ void TileMap::Update(float dt){
 void TileMap::Start(){
     
 }
+
+void TileMap::NotifyCollision(GameObject& other){
+    
+}

@@ -21,11 +21,23 @@ Vec2 Vec2::operator*(float rhs){
    return Vec2(this -> x * rhs, this -> y * rhs);
 }
 
+Vec2 Vec2::operator*(Vec2 rhs){
+   return Vec2(this -> x * rhs.x, this -> y * rhs.y);
+}
+
+Vec2 operator*(float escalar, Vec2 &rhs){
+   return Vec2(escalar * rhs.x, escalar * rhs.y);
+}
+
+Vec2 operator*(Vec2 const &rhs, float escalar){
+   return Vec2(escalar * rhs.x, escalar * rhs.y);
+}
+
 Vec2 Vec2::operator+=(Vec2 rhs){
    *this = Vec2(this -> x + rhs.x, this -> y + rhs.y);
 }
 
-Vec2 Vec2::GetRotated(float angle){
+Vec2 Vec2::Rotate(float angle){
    Vec2 aux;
    float cosx = cos(angle);
    float sinx = sin(angle);
@@ -58,8 +70,4 @@ float Vec2::anglex2(Vec2& rhs){
 
 float Vec2::dist(Vec2& rhs){
    return (*this - rhs).Magnitude();
-}
-
-Vec2 operator*(float escalar, Vec2 &rhs){
-   return Vec2(escalar * rhs.x, escalar * rhs.y);
 }

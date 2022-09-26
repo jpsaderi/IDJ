@@ -11,7 +11,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, string file) : tileSet(*(new Gam
 }
 
 TileSet::~TileSet(){
-    // delete associated;
+
 }
 
 void TileSet::RenderTile(unsigned index, float x, float y){

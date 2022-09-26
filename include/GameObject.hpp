@@ -12,7 +12,8 @@ using namespace std;
 class Component;
 class GameObject{
 private:
-    vector <Component*> components;
+    vector <unique_ptr<Component>> components;
+    // vector <Component*> components;
     bool isDead;
 public:
     GameObject();
@@ -22,6 +23,7 @@ public:
     void Update(float dt);
     void Render();
     bool IsDead();
+    void NotifyCollision(GameObject& other);
     
     void RequestDelete();
     void AddComponent(Component* cpt);

@@ -1,4 +1,5 @@
 #include "../include/State.hpp"
+#include "../include/PenguinBody.hpp"
 
 State::State(){
 	GameObject* go = new GameObject();
@@ -25,17 +26,30 @@ State::State(){
 	music.Open("./assets/audio/stageState.ogg");
 	
 	GameObject* AlienGO = new GameObject();
-	AlienGO -> box.x = 512 - AlienGO -> box.w/2;
+	AlienGO -> box.x = 100 - AlienGO -> box.w/2;
 	AlienGO -> box.y = 300 - AlienGO -> box.h/2;
 
 	Alien* alien = new Alien(*AlienGO, 5);
 	AlienGO -> AddComponent(alien);
-	// Camera::Follow(AlienGO);
-
 	objectArray.emplace_back(AlienGO);
 
+	GameObject* PenguinGO = new GameObject();
+	PenguinGO -> box.x = 704 - PenguinGO -> box.w/2;
+	PenguinGO -> box.y = 640 - PenguinGO -> box.h/2;
+
+	PenguinBody* penguin = new PenguinBody(*PenguinGO);
+	PenguinGO -> AddComponent(penguin);
+
+	Camera::Follow(PenguinGO);
+	
+	objectArray.emplace_back(PenguinGO);
+	
 	quitRequested = false;
 	started = false;
+}
+
+State::~State(){
+	objectArray.clear();
 }
 
 void State::LoadAssets(){
@@ -43,19 +57,48 @@ void State::LoadAssets(){
     music.Play();
 }
 
+void State::Start(){
+	LoadAssets();
+	for(unsigned int i = 0; i < objectArray.size(); i++){
+		objectArray[i] -> Start();
+	}
+	started = true;	
+}
+
 void State::Update(float dt){
 	InputManager instance = InputManager::GetInstance();
-	if(instance.KeyPress(ESCAPE_KEY) || instance.QuitRequested() == true){
+	if(instance.KeyPress(ESCAPE_KEY) || instance.QuitRequested()){
 		quitRequested = true;
 	}
 
-	Camera::Update(dt);
-    for(unsigned int i = 0; i < objectArray.size(); i++){
+    Camera::Update(dt);
+    
+	for(unsigned int i = 0 ; i < objectArray.size();i++){
         objectArray[i] -> Update(dt);
     }
-    for(unsigned int i = 0; i < objectArray.size(); i++){
-        if (objectArray[i]->IsDead()){
-			objectArray.erase(objectArray.begin()+i);
+    
+	for(unsigned int i = 0 ; i < objectArray.size();i++){
+        Collider *collider = (Collider *)objectArray[i] -> GetComponent("Collider");
+        if(collider == nullptr){
+            continue;
+		}
+        for (unsigned int j = i+1; j < objectArray.size(); j++){
+            Collider *collider2 = (Collider *)objectArray[j] -> GetComponent("Collider");
+            if(collider2 == nullptr){
+                continue;
+			}
+            if(collider ->IsColliding(*collider2)){
+                objectArray[i] ->NotifyCollision(*objectArray[j]);
+                objectArray[j] ->NotifyCollision(*objectArray[i]);
+            }
+        }
+    }
+    
+    for(unsigned int i = 0, j = objectArray.size() ; i < j;i++){
+        if(objectArray[i] -> IsDead()){
+            objectArray.erase(objectArray.begin()+i);
+            i--;
+            j--;
         }
     }
 }
@@ -68,19 +111,6 @@ void State::Render(){
 
 bool State::QuitRequested(){
     return quitRequested;
-}
-
-State::~State(){
-    objectArray.clear(); 
-}
-
-void State::Start(){
-	LoadAssets();
-	for(unsigned int i = 0; i < objectArray.size(); i++){
-		// objectArray[i].get() -> Start();
-		objectArray[i] -> Start();
-	}
-	started = true;	
 }
 
 weak_ptr<GameObject> State::AddObject(GameObject* go){

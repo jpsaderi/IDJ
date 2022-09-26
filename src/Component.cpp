@@ -19,3 +19,7 @@ Component::~Component(){
 // bool Component::Is(string type){
     
 // }
+
+// void Component::NotifyCollision(GameObject& other){
+
+// }

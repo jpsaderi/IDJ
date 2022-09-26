@@ -26,6 +26,6 @@ bool Rect::Contains(Vec2 rhs){
     return false;
 }
 
-Vec2 Rect::Center(){
+Vec2 Rect::GetCenter(){
     return Vec2((this -> x + this -> w/2), (this -> y + this -> h/2));
 }

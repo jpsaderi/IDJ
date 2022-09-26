@@ -4,6 +4,7 @@
     "files.associations": {
         "new": "cpp",
         "unordered_map": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "iostream": "cpp"
     }
 }

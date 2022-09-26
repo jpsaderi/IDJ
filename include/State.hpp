@@ -5,17 +5,16 @@
 
 #include "SDL_include.h"
 #include "Bits/stdc++.h"
-#include <memory>
 #include "GameObject.hpp"
 #include "Sprite.hpp"
 #include "Music.hpp"
-#include "Face.hpp"
 #include "Rect.hpp"
 #include "Vec2.hpp"
-#include <math.h>
 #include "TileMap.hpp"
 #include "CameraFollower.hpp"
 #include "Alien.hpp"
+#include <memory>
+#include <math.h>
 
 using namespace std;
 

@@ -13,13 +13,15 @@ public:
 
     Vec2 operator+ (Vec2 rhs);
     Vec2 operator- (Vec2 rhs);
-    Vec2 operator* (float rhs);
     Vec2 operator+= (Vec2 rhs);
-    Vec2 GetRotated(float angle);
+    Vec2 operator* (float rhs);
+    Vec2 operator* (Vec2 rhs);
+    friend Vec2 operator* (float escalar, Vec2 &rhs);
+    friend Vec2 operator* (Vec2 const &rhs, float escalar);
+    Vec2 Rotate(float rad);
     Vec2 Normalized();
 
     float Magnitude();
-
     float anglex();
     float anglex2(Vec2& rhs);    
     float dist(Vec2& rhs);

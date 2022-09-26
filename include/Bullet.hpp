@@ -3,6 +3,7 @@
 
 #include "Component.hpp"
 #include "SDL_include.h"
+#include "Collider.hpp"
 #include <string>
 
 using namespace std;
@@ -13,14 +14,15 @@ private:
     float distanceLeft;
     int damage;
 public:
-    Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, string sprite);
-    
+    bool targetsPlayer;
+    Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, string sprite, int frameCount, bool targetsPlayer);
+    int GetDamage();
+
     void Start();
     void Update(float dt);
     void Render();
     bool Is(string type);
-    
-    int GetDamage();
+    void NotifyCollision(GameObject& other);
 };
 
 #endif

@@ -1,5 +1,8 @@
 #include "../include/Alien.hpp"
 #include "../include/Game.hpp"
+#include "../include/PenguinBody.hpp"
+
+int Alien::alienCount = 0;
 
 Alien::Alien(GameObject& associated, int nMinions) : Component(associated){
     Sprite* sprite = new Sprite(associated, "./assets/img/alien.png");
@@ -7,10 +10,21 @@ Alien::Alien(GameObject& associated, int nMinions) : Component(associated){
     hp = 100;
     speed = Vec2(0, 0);
     this -> nMinions = nMinions;
+
+    Collider *collider = new Collider(associated);
+    associated.AddComponent(collider);
+    alienCount++;
+    state = RESTING;
+    restTimer.Restart();
 }
 
 Alien::~Alien(){
-
+    for(unsigned int i = 0; i < minionArray.size(); i++){
+        if(shared_ptr<GameObject> go = minionArray[i].lock()){
+            go -> RequestDelete();
+        }
+    }
+    alienCount--;
 }
 
 void Alien::Start(){
@@ -31,49 +45,109 @@ void Alien::Render(){
 void Alien::Update(float dt){
     int spd = 256;
     InputManager input= InputManager::GetInstance();
-    associated.angleDeg -= M_PI/180*dt*spd*8;
-    if(input.MousePress(LEFT_MOUSE_BUTTON)){
-        taskQueue.push(Action(SHT, input.GetMouseX()+Camera::pos.x, input.GetMouseY()+Camera::pos.y));
+    if(hp <= 0){
+        associated.RequestDelete();
     }
-    else if(input.MousePress(RIGHT_MOUSE_BUTTON)){
-        taskQueue.push(Action(MV, input.GetMouseX()+Camera::pos.x, input.GetMouseY()+Camera::pos.y));
-    }
+    else{
+        restTimer.Update(dt);
+        Vec2 alien_pos = Vec2(associated.box.x, associated.box.y);
+        if(state == RESTING){
+            if(restTimer.Get() >= 0.5){
+                Vec2 destiny_center;
+                PenguinBody* pbody = PenguinBody::player;
+                if(pbody != nullptr){
+                    destiny_center.x = pbody -> GetPosition().GetCenter().x - associated.box.w/2;
+                    destiny_center.y = pbody -> GetPosition().GetCenter().y - associated.box.h/2;
+                    destionation = Vec2(destiny_center.x, destiny_center.y);
+                    speed = (destiny_center-alien_pos).Normalized();
+                    state = MOVING;
+                }
+            }
+        }
 
-    speed = Vec2(0, 0);
-    Vec2 alien_pos = Vec2(associated.box.x, associated.box.y);
+        associated.angleDeg -= M_PI/180*dt*spd*8;
 
-    if(taskQueue.size() >= 1){
-        Action action = taskQueue.front();
-        if(action.type == MV){
-            Vec2 destiny_center;
-            destiny_center.x = action.pos.x - associated.box.w/2;
-            destiny_center.y = action.pos.y - associated.box.h/2;
-
-            speed += (destiny_center-alien_pos).Normalized();
+        if(state == MOVING){
+            bool arrived = false;
             alien_pos += speed*dt*spd;
-            if(std::abs(alien_pos.dist(destiny_center)) <= 5){
-                alien_pos = destiny_center;
-                taskQueue.pop();
+            if(std::abs(alien_pos.dist(destionation)) <= 325){
+                arrived = true;
+                speed = Vec2(0, 0);
             }
             associated.box.x = alien_pos.x;
             associated.box.y = alien_pos.y;
-        }
-        if(action.type == SHT){
-            int minionN = ClosestMinion(action.pos);
-            if(shared_ptr<GameObject> go = minionArray[minionN].lock()){
-                Minion* minion = (Minion*) go -> GetComponent("Minion");
-                minion -> Shoot(action.pos);
-                taskQueue.pop();
+            if(arrived == true){
+                Vec2 destiny_center;
+                PenguinBody* pbody = PenguinBody::player;
+                if(pbody != nullptr){
+                    destiny_center.x = pbody -> GetPosition().GetCenter().x;
+                    destiny_center.y = pbody -> GetPosition().GetCenter().y;
+                    destionation = Vec2(destiny_center.x, destiny_center.y);
+
+                    int minionN = ClosestMinion(destionation);
+                    if(minionN != -1){
+                        if(shared_ptr<GameObject> go = minionArray[minionN].lock()){
+                            Minion* minion = (Minion*) go -> GetComponent("Minion");
+                            minion -> Shoot(destionation);
+                        }
+                    state = RESTING;
+                    restTimer.Restart();
+                    }
+                }
             }
+
         }
-    }
-    if(hp <= 0){
-        associated.RequestDelete();
     }
 }
 
 bool Alien::Is(string type){
     return type == "Alien";
+}
+
+void Alien::NotifyCollision(GameObject& other){
+    Bullet* bullet = (Bullet*) other.GetComponent("Bullet");
+    if(bullet != nullptr){
+        if(!bullet->targetsPlayer){
+            other.RequestDelete();
+            hp -= bullet->GetDamage();
+            cout << "Vida do Alien: " << hp << endl;
+            if(hp <= 0){
+                GameObject* go = new GameObject();
+                State* instance = &Game::GetInstance().GetState();
+                go -> angleDeg = associated.angleDeg;
+                Sprite* sprite = new Sprite(*go, "assets/img/aliendeath.png",4, 3.0/30.0, 12.0/30.0);
+                go->box.x = associated.box.GetCenter().x - go->box.w/2;
+                go->box.y = associated.box.GetCenter().y - go->box.h/2;
+                Sound* sound = new Sound(*go, "assets/audio/boom.wav");
+                sound -> Volume(10);
+                sound -> Play(0);
+                go->AddComponent(sound);
+                go->AddComponent(sprite);
+                instance -> AddObject(go);
+                for(unsigned int i = 0; i < minionArray.size(); i++){
+                    if(shared_ptr<GameObject> go = minionArray[i].lock()){
+                        GameObject* go2 = new GameObject();
+                        go2 -> angleDeg = go -> angleDeg;
+                        go2 -> box.x = go -> box.GetCenter().x - go2 -> box.w/2;
+                        go2 -> box.y = go -> box.GetCenter().y - go2 -> box.h/2;
+                        
+                        Sprite* minionSprite = (Sprite*) go -> GetComponent("Sprite");
+                        Vec2 scale = minionSprite -> GetScale();
+                        
+                        Sprite* sprite = new Sprite(*go2, "./assets/img/aliendeath.png",4,3.0/30.0,12.0/30.0);
+                        sprite -> SetScale(scale.x*0.5, scale.y*0.5);
+                        
+                        Sound* sound = new Sound(*go2, "assets/audio/boom.wav");
+                        sound -> Volume(10);
+                        sound -> Play(0);
+                        go2->AddComponent(sound);
+                        go2->AddComponent(sprite);
+                        instance -> AddObject(go2);
+                    }
+                }
+            }
+        }       
+    }
 }
 
 int Alien::ClosestMinion(Vec2 pos){
@@ -90,10 +164,4 @@ int Alien::ClosestMinion(Vec2 pos){
         }
     }
     return minion;
-}
-
-Alien::Action::Action(ActionType type, float x, float y){
-    pos.x = x;
-    pos.y = y;
-    this -> type = type;
 }

@@ -21,3 +21,7 @@ bool CameraFollower::Is(string type){
 void CameraFollower::Start(){
     
 }
+
+void CameraFollower::NotifyCollision(GameObject& other){
+    
+}
