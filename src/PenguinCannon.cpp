@@ -24,9 +24,10 @@ void PenguinCannon::Shoot(){
         go -> angleDeg = angle*180/M_PI;
 
         Bullet* bullet = new Bullet(*go, angle, 512, 10, 1024, "assets/img/penguinbullet.png", 4, false);
+        // Bullet* bullet = new Bullet(*go, angle, 512, 50, 1024, "assets/img/penguinbullet.png", 4, false);
         go -> AddComponent(bullet);
 
-        State* instance = &Game::GetInstance().GetState();
+        State* instance = &Game::GetInstance().GetCurrentState();
         instance -> AddObject(go);
     
         if(timer == nullptr){

@@ -1,9 +1,10 @@
 #ifndef BULLET_HPP
 #define BULLET_HPP
 
-#include "Component.hpp"
 #include "SDL_include.h"
 #include "Collider.hpp"
+#include "Component.hpp"
+#include "Sprite.hpp"
 #include <string>
 
 using namespace std;

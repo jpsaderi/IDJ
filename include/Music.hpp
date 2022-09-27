@@ -5,6 +5,7 @@
 #define INCLUDE_SDL_MIXER
 
 #include "SDL_include.h"
+#include "Resources.hpp"
 #include <string>
 
 using namespace std;

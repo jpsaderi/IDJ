@@ -2,12 +2,12 @@
 #define TILEMAP_HPP
 
 #include "SDL_include.h"
+#include "Camera.hpp"
 #include "GameObject.hpp"
 #include "TileSet.hpp"
 #include <string>
 #include <vector>
 #include <fstream>
-#include "Camera.hpp"
 
 class TileMap : public Component{
 private:

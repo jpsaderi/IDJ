@@ -1,8 +1,8 @@
 #ifndef COLLIDER_HPP
 #define COLLIDER_HPP
 
-#include "GameObject.hpp"
 #include "Collision.hpp"
+#include "GameObject.hpp"
 
 class Collider : public Component{
 private:

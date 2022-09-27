@@ -2,13 +2,12 @@
 #define PENGINCANNON_HPP
 
 #include "SDL_include.h"
+#include "Bullet.hpp"
+#include "Collider.hpp"
 #include "GameObject.hpp"
 #include "Sprite.hpp"
-#include "Bullet.hpp"
-#include "Timer.hpp"
 #include "Sound.hpp"
-#include "Collider.hpp"
-// #include "State.hpp"
+#include "Timer.hpp"
 
 using namespace std;
 

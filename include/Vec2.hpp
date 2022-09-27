@@ -1,5 +1,6 @@
 #ifndef VEC2_HPP
 #define VEC2_HPP
+
 #include "SDL_include.h"
 #include <math.h>
 

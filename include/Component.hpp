@@ -3,8 +3,8 @@
 
 #define INCLUDE_SDL_MIXER
 
-#include "GameObject.hpp"
 #include "SDL_include.h"
+#include "GameObject.hpp"
 #include <string>
 
 using namespace std;

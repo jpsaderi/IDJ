@@ -1,8 +1,8 @@
 #include "../include/Game.hpp"
 
 int main (int argc, char** argv) {
-    Game game = Game::GetInstance();
-    game.Run();
-
+    Game::GetInstance().Push(new TitleState());
+    Game::GetInstance().Run();
+    
     return 0;
 }

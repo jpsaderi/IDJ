@@ -26,23 +26,21 @@ void InputManager::Update(){
         if(event.type == SDL_QUIT){
             quitRequested = true;
         }
-        else{
-            if(event.type == SDL_MOUSEBUTTONDOWN && event.key.repeat == false){
-                mouseState[event.button.button] = true;
-                mouseUpdate[event.button.button] = updateCounter;
-            }
-            else if(event.type == SDL_MOUSEBUTTONUP){
-                mouseState[event.button.button] = false;
-                mouseUpdate[event.button.button] = updateCounter;
-            }
-            if(event.type == SDL_KEYDOWN && event.key.repeat == false){
-                keyState[event.key.keysym.sym] = true;
-                keyUpdate[event.key.keysym.sym] = updateCounter;
-            }
-            else if(event.type == SDL_KEYUP){
-                keyState[event.key.keysym.sym] = false;
-                keyUpdate[event.key.keysym.sym] = updateCounter;
-            }
+        if(event.type == SDL_MOUSEBUTTONDOWN && event.key.repeat == false){
+            mouseState[event.button.button] = true;
+            mouseUpdate[event.button.button] = updateCounter;
+        }
+        if(event.type == SDL_MOUSEBUTTONUP){
+            mouseState[event.button.button] = false;
+            mouseUpdate[event.button.button] = updateCounter;
+        }
+        if(event.type == SDL_KEYDOWN && event.key.repeat == false){
+            keyState[event.key.keysym.sym] = true;
+            keyUpdate[event.key.keysym.sym] = updateCounter;
+        }
+        if(event.type == SDL_KEYUP){
+            keyState[event.key.keysym.sym] = false;
+            keyUpdate[event.key.keysym.sym] = updateCounter;
         }
     }
 }
@@ -83,7 +81,7 @@ bool InputManager::IsKeyDown(int key){
 
 bool InputManager::MousePress(int button){
     if(mouseUpdate[button] == updateCounter){
-        return !mouseState[button];
+        return mouseState[button];
     }
     return false;
 }

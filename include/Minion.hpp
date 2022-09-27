@@ -2,9 +2,9 @@
 #define MINION_HPP
 
 #include "SDL_include.h"
-#include "Component.hpp"
 #include "Bullet.hpp"
 #include "Collider.hpp"
+#include "Component.hpp"
 #include <string>
 
 using namespace std;

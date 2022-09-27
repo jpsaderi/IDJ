@@ -40,7 +40,7 @@ void GameObject::AddComponent(Component* cpt){
 }
 
 void GameObject::RemoveComponent(Component* cpt){
-    for(unsigned int i = 0; i < this -> components.size(); i++){ // não tem -1
+    for(unsigned int i = 0; i < this -> components.size(); i++){
         if(cpt == this -> components[i].get()){
             components.erase(this -> components.begin()+i);
             break;

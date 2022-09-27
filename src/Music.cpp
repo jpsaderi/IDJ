@@ -1,7 +1,7 @@
 #include "../include/Music.hpp"
 
 Music::Music(){
-    // music = nullptr;
+    
 }
 
 Music::Music(string file){
@@ -17,7 +17,7 @@ void Music::Stop(int msToStop){
 }
 
 void Music::Open(string file){
-    music = Mix_LoadMUS(file.c_str());
+    music = Resources::GetMusic(file).get();
 }
 
 bool Music::IsOpen(){
@@ -29,7 +29,6 @@ bool Music::IsOpen(){
 
 Music::~Music(){
     Stop(1500);
-    Mix_FreeMusic(music);
 }
 
 void Music::Volume(int volume){ // Salvando o nosso ouvido 1...2...3...

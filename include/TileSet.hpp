@@ -5,8 +5,6 @@
 #include "Sprite.hpp"
 #include <string>
 
-
-
 class TileSet{
 private:
     Sprite tileSet;

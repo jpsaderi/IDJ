@@ -8,8 +8,8 @@ Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, flo
     associated.AddComponent(spr);
 
     this -> speed = Vec2(1, 0);
-    this -> speed = this -> speed.Rotate(angle)*speed*0.40;
-    // this -> speed = this -> speed.Rotate(angle)*speed;
+    // this -> speed = this -> speed.Rotate(angle)*speed*0.40;
+    this -> speed = this -> speed.Rotate(angle)*speed;
     distanceLeft = maxDistance;
     this -> damage = damage;
 

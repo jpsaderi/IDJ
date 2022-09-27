@@ -2,10 +2,10 @@
 #define GAMEOBJECT_HPP
 
 #include "SDL_include.h"
-#include "bits/stdc++.h"
-#include <string>
 #include "Component.hpp"
 #include "Rect.hpp"
+#include "bits/stdc++.h"
+#include <string>
 
 using namespace std;
 
@@ -13,7 +13,6 @@ class Component;
 class GameObject{
 private:
     vector <unique_ptr<Component>> components;
-    // vector <Component*> components;
     bool isDead;
 public:
     GameObject();

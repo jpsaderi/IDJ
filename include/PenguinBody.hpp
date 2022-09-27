@@ -2,11 +2,9 @@
 #define PENGINBODY_HPP
 
 #include "SDL_include.h"
+#include "Collider.hpp"
 #include "GameObject.hpp"
 #include "Sprite.hpp"
-// #include "State.hpp"
-#include "Collider.hpp"
-#include "PenguinCannon.hpp"
 
 class PenguinBody : public Component{
 private:

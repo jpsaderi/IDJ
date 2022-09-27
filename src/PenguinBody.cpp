@@ -1,6 +1,8 @@
 #include "../include/PenguinBody.hpp"
+#include "../include/PenguinCannon.hpp"
 #include "../include/Game.hpp"
 #include "bits/stdc++.h"
+
 PenguinBody* PenguinBody::player = nullptr;
 
 PenguinBody::PenguinBody(GameObject& associated) : Component(associated) {
@@ -20,7 +22,7 @@ PenguinBody::~PenguinBody() {
 }
 
 void PenguinBody::Start() {
-    State* instance = &Game::GetInstance().GetState();
+    State* instance = &Game::GetInstance().GetCurrentState();
     GameObject* go = new GameObject();
     weak_ptr<GameObject> penguinCenter = instance->GetObjectPtr(&associated);
     PenguinCannon* penguinCannon = new PenguinCannon(*go, penguinCenter);
@@ -57,6 +59,10 @@ void PenguinBody::Update(float dt){
         associated.angleDeg = angle;
     }
     penguinPos+= speed.Normalized().Rotate(angle/180*M_PI)*dt*8;
+    if (penguinPos.x >= 1350 || penguinPos.x <= 0)
+        penguinPos.x = associated.box.x;
+    if (penguinPos.y >= 1280 || penguinPos.y <= 0)
+        penguinPos.y = associated.box.y;
     associated.box.x = penguinPos.x;
     associated.box.y = penguinPos.y;
     if(hp <= 0){
@@ -86,12 +92,12 @@ void PenguinBody::NotifyCollision(GameObject& other) {
             other.RequestDelete();
             if(hp <= 0){
                 GameObject* go = new GameObject();
-                State* instance = &Game::GetInstance().GetState();
+                State* instance = &Game::GetInstance().GetCurrentState();
                 Sprite* sprite = new Sprite(*go, "assets/img/penguindeath.png", 5, 3.0/30.0, 15.0/30.0);
                 go->box.x = associated.box.GetCenter().x - go->box.w/2;
                 go->box.y = associated.box.GetCenter().y - go->box.h/2;
                 Sound* sound = new Sound(*go, "assets/audio/boom.wav");
-                sound -> Volume(10);
+                sound -> Volume(5);
                 sound -> Play(0);
                 go->AddComponent(sound);
                 go->AddComponent(sprite);

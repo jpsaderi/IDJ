@@ -1,6 +1,7 @@
 #include "../include/Game.hpp"
 
 Game* Game::instance = nullptr;
+stack <unique_ptr<State>> Game::stateStack;
 
 Game::Game(string title, int width, int height){
     if (instance != nullptr){
@@ -22,12 +23,10 @@ Game::Game(string title, int width, int height){
 
     if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_MOD) == 0){
         printf("Mix_Init fail\n");
-        // cont << Mix_GetError() << endl; 
     }
 
     if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) != 0){
         printf("MIX_OpenAudio fail\n");
-        // cont << Mix_GetError() << endl;
     }
     
     Mix_AllocateChannels(32);
@@ -38,31 +37,36 @@ Game::Game(string title, int width, int height){
         cout << SDL_GetError() << endl;
     }
 
-    // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //OpenGL ou Direct3D
-    // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
-    // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
-
+  
     if (renderer == nullptr){
         printf("SDL_CreateRenderer fail\n");
         cout << SDL_GetError() << endl;
     }
+
+    if (TTF_Init() != 0){
+        printf("TTF_Init fail\n");
+    }
     frameStart = 0;
     dt = 0;
     srand(time(NULL));
-    state = new State();
+    storedState = nullptr;
 }
 
 Game::~Game(){
+    if(storedState != nullptr){
+        delete storedState;
+    }
+    while(stateStack.empty() == false){
+        stateStack.pop();
+    }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     Mix_CloseAudio();
     Mix_Quit();
     IMG_Quit();
     SDL_Quit();
-}
-State& Game::GetState(){
-    return *state;
+    TTF_Quit();
 }
 
 Game& Game::GetInstance(){
@@ -76,19 +80,54 @@ Game& Game::GetInstance(){
 SDL_Renderer* Game::GetRenderer(){
     return renderer;
 }
+
+State& Game::GetCurrentState(){
+    return *stateStack.top();
+}
+
+void Game::Push(State* state){
+    storedState = state;
+}
+
 void Game::Run(){
-    state->Start();
-    while(state->QuitRequested() == false){
+    if(storedState != nullptr){
+        stateStack.emplace(storedState);
+        storedState = nullptr;
+        stateStack.top() -> Start();
+    }
+    else{
+        printf("Game Run error\n");
+        exit(1);
+    }
+    while(stateStack.top() -> QuitRequested() == false && stateStack.empty() == false){
+        if(stateStack.top() -> PopRequested() == true){
+            stateStack.top() -> Pause();
+            stateStack.pop();
+            if(stateStack.empty() == false){
+                stateStack.top() -> Resume();
+            }
+        }
+        if(storedState != nullptr){
+            stateStack.top() -> Pause();
+            stateStack.emplace(storedState);
+            stateStack.top() -> Start();
+            storedState = nullptr;
+        }
+
         CalculateDeltaTime();
         InputManager::GetInstance().Update();
-        state->Update(dt);
-        state->Render();
+        stateStack.top() -> Update(dt);
+        stateStack.top() -> Render();
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
+    }
+    while(stateStack.empty() == false){
+        stateStack.pop();
     }
     Resources::ClearImages();
     Resources::ClearSounds();
     Resources::ClearMusics();
+    Resources::ClearFonts();
 }
 
 void Game::CalculateDeltaTime(){

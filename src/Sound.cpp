@@ -9,11 +9,7 @@ Sound::Sound(GameObject& associated, string file) : Sound(associated){
 }
 
 Sound::~Sound(){
-    Stop();
-    if(this -> chunk != nullptr){
-        Mix_HaltChannel(0);
-        Mix_FreeChunk(chunk);
-    }
+  
 }
 
 void Sound::Play(int times){
@@ -30,7 +26,7 @@ void Sound::Stop(){
 }
 
 void Sound::Open(string file){
-    this -> chunk = Resources::GetSound(file);
+    this -> chunk = Resources::GetSound(file).get();
     if(this -> chunk == nullptr){
         printf("Sound Open fail\n");
     }
